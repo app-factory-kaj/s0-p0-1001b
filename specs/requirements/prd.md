@@ -4,7 +4,7 @@
 
 Teams building and testing integrations with the platform need a minimal, predictable HTTP service to use as a demo target and smoke-test endpoint. Without one, every team stands up their own throwaway "hello world" service, which wastes time and gives inconsistent behavior.
 
-## Solution
+##  S0 marker s0-p0-1001b.Solution
 
 Greeter is a small Go HTTP service that exposes a single endpoint, `GET /hello?name=X`, returning a JSON greeting for the given name. It is a lightweight, stateless utility service — simple enough to use as a reference implementation or integration smoke test.
 
