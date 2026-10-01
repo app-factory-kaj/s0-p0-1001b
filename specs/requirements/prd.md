@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-Teams building and testing integrations with the platform need a minimal, predictable HTTP service to use as a demo target and smoke-test endpoint. Without one, every team stands up their own throwaway "hello world" service, which wastes time and gives inconsistent behavior.
+Teams building and testing integrations with the platform need a minimal, predictable HTTP service to use as a demo target and smoke-test endpoint. Without one, every team stands up their own throwaway "hello world" service, which wastes time and gives inconsistent behavior. S0 marker s0-p0-1001b-r2.
 
 ## S0 marker s0-p0-1001b.Solution
 
