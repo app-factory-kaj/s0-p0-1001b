@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T19:28:44Z",
+  "commit": "76a2eca5a6421bfd5436180ea61af331da99bd7d",
+  "baseUrl": "http://development-default.openchoreoapis.localhost:19080/s0-p0-1001b-greeter-http",
+  "isolation": "the greeter is a stateless read-only GET endpoint with no shared mutable state; each scenario is an independent request asserted on its own response",
+  "scenarios": [
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 6,
+      "rule": "A caller who supplies a name receives a greeting that includes it",
+      "scenario": "Greeting a named caller",
+      "tags": ["@story-1"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -i --max-time 10 \"$BASE/health\"", "exit": 0 },
+        { "text": "an API Consumer calls \"GET /hello?name=Ada\"", "keyword": "When",
+          "command": "curl -s -i --max-time 10 \"$BASE/hello?name=Ada\"", "exit": 0,
+          "observed": "HTTP/1.1 200 OK, body {\"message\":\"Hello, Ada!\",\"name\":\"Ada\"}" },
+        { "text": "the response is a JSON greeting that includes \"Ada\"", "keyword": "Then",
+          "command": "curl -s --max-time 10 \"$BASE/hello?name=Ada\" | grep -o 'Ada'", "exit": 0,
+          "observed": "response is valid JSON with content-type application/json; both \"name\":\"Ada\" and message \"Hello, Ada!\" include \"Ada\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello?name=Ada", "status": 200 }]
+      }
+    },
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 14,
+      "rule": "A caller who omits the name still receives a valid default greeting",
+      "scenario": "Greeting with no name supplied",
+      "tags": ["@story-2"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -i --max-time 10 \"$BASE/health\"", "exit": 0 },
+        { "text": "an API Consumer calls \"GET /hello\" with no name parameter", "keyword": "When",
+          "command": "curl -s -i --max-time 10 \"$BASE/hello\"", "exit": 0,
+          "observed": "HTTP/1.1 200 OK, body {\"message\":\"Hello, World!\",\"name\":\"World\"}" },
+        { "text": "the response is a JSON greeting with a default name", "keyword": "Then",
+          "command": "curl -s --max-time 10 \"$BASE/hello\" | python3 -c \"import sys,json; d=json.load(sys.stdin); assert d['name'] and d['message']\"", "exit": 0,
+          "observed": "name field is non-empty default \"World\"; message is \"Hello, World!\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello", "status": 200 }]
+      }
+    },
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 19,
+      "rule": "A caller who omits the name still receives a valid default greeting",
+      "scenario": "Greeting with an empty name supplied",
+      "tags": ["@story-2"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -i --max-time 10 \"$BASE/health\"", "exit": 0 },
+        { "text": "an API Consumer calls \"GET /hello?name=\"", "keyword": "When",
+          "command": "curl -s -i --max-time 10 \"$BASE/hello?name=\"", "exit": 0,
+          "observed": "HTTP/1.1 200 OK, body {\"message\":\"Hello, World!\",\"name\":\"World\"}" },
+        { "text": "the response is a JSON greeting with a default name", "keyword": "Then",
+          "command": "curl -s --max-time 10 \"$BASE/hello?name=\" | python3 -c \"import sys,json; d=json.load(sys.stdin); assert d['name'] and d['message']\"", "exit": 0,
+          "observed": "empty name query param falls back to the same default name \"World\"; message is \"Hello, World!\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello?name=", "status": 200 }]
+      }
+    }
+  ]
+}
